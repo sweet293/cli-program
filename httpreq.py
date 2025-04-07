@@ -2,8 +2,6 @@
 import socket
 import ssl
 import re
-
-
 def make_request(url):
     # Extract host from URL
     if '://' in url:
