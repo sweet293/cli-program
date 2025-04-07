@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+import argparse
+from httpreq import make_request
+
+def main():
+    parser = argparse.ArgumentParser(description="go2web CLI")
+    parser.add_argument("-u", "--url", help="Make HTTP request to URL")
+
+    args = parser.parse_args()
+
+    if args.url:
+        print(f"Fetching URL: {args.url}")
+        result = make_request(args.url)
+        print(result)
+
+if __name__ == "__main__":
+    main()
