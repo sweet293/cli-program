@@ -63,6 +63,16 @@ def make_request(url):
                     https_response += data
 
                 ss.close()
-                return https_response.decode('utf-8', errors='replace')
+                response_text = https_response.decode('utf-8', errors='replace')
+                if '\r\n\r\n' in response_text:
+                    response_text = response_text.split('\r\n\r\n', 1)[1]
 
-    return response_text
+    def clean_html(html):
+        html = re.sub(r'<(script|style).*?>.*?</\1>', '', html, flags=re.DOTALL)
+        html = re.sub(r'<[^>]+>', '', html)  # scoate tag-urile
+        html = re.sub(r'[ \t]+', ' ', html)  # spatii/tabs multiple -> 1 spatiu
+        html = re.sub(r'\s*\n\s*', '\n', html)  # spatii inainte/dupa newline -> sterge
+        html = re.sub(r'\n+', '\n', html)  # newlines multiple -> unul singur
+        return html.strip()
+
+    return clean_html(response_text)
