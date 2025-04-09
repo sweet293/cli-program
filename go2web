@@ -32,7 +32,6 @@ def main():
         except ValueError:
             print("Please enter a valid number.")
             return
-
         link = results[choice - 1][1]
 
         if link.startswith("/l/") and "uddg=" in link:
