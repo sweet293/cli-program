@@ -49,4 +49,5 @@ def search_request(query):
     print("==== RAW RESPONSE START ====")
     print(response_text[:1000])  # print first 1000 chars
     print("==== RAW RESPONSE END ====")
+
     return cleaned_results
