@@ -30,7 +30,7 @@ def main():
                 print("Invalid choice.")
                 return
         except ValueError:
-            print("Please enter a valid number.")
+            print("Please enter a valid number")
             return
         link = results[choice - 1][1]
 
