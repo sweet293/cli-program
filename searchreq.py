@@ -46,5 +46,4 @@ def search_request(query):
         clean_title = html.unescape(clean_title)
         cleaned_results.append((clean_title.strip(), link))
 
-
     return cleaned_results
