@@ -3,6 +3,7 @@ import argparse
 import webbrowser
 from httpreq import make_request
 from searchreq import search_request
+from syscache import get_search_results
 import urllib.parse
 
 def main():
@@ -19,7 +20,7 @@ def main():
 
     if args.search:
         print(f"Searching: {args.search}")
-        results = search_request(args.search)
+        results = get_search_results(args.search)
         for idx, (title, link) in enumerate(results, 1):
             print(f"{idx}. {title}\n {link}\n ")
 
@@ -34,15 +35,16 @@ def main():
             return
         link = results[choice - 1][1]
 
-        if link.startswith("/l/") and "uddg=" in link:
-            link = urllib.parse.parse_qs(urllib.parse.urlparse(link).query).get('uddg', [link])[0]
-            link = urllib.parse.unquote(link)
+        if "uddg=" in link:
+            parsed = urllib.parse.urlparse(link)
+            params = urllib.parse.parse_qs(parsed.query)
+            if 'uddg' in params:
+                link = urllib.parse.unquote(params['uddg'][0])
 
-        if link.startswith("/"):
+        elif link.startswith("/"):
             link = "https://duckduckgo.com" + link
 
         webbrowser.open_new(link)
-
 
 if __name__ == "__main__":
     main()
