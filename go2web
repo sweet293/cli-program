@@ -10,12 +10,14 @@ def main():
     parser = argparse.ArgumentParser(description="go2web CLI")
     parser.add_argument("-u", "--url", help="Make HTTP request to URL")
     parser.add_argument("-s", "--search", help="Search the term on Google")
+    parser.add_argument("--accept", choices=["html", "json"], default="html",
+                        help="Set accepted content type (html or json)")
 
     args = parser.parse_args()
 
     if args.url:
         print(f"Fetching URL: {args.url}")
-        result = make_request(args.url)
+        result = make_request(args.url, accept=args.accept)
         print(result)
 
     if args.search:
@@ -23,7 +25,6 @@ def main():
         results = get_search_results(args.search)
         for idx, (title, link) in enumerate(results, 1):
             print(f"{idx}. {title}\n {link}\n ")
-
 
         try:
             choice = int(input("What do you want to access?: "))

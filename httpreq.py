@@ -2,20 +2,28 @@
 import socket
 import ssl
 import re
-def make_request(url):
+def make_request(url, accept="html"):
     # Extract host from URL
     if '://' in url:
         url = url.split('://', 1)[1]
 
-    host = url.split('/', 1)[0]
-    path = '/'
+    parts = url.split('/', 1)
+    host = parts[0]
+    path = '/' + parts[1] if len(parts) > 1 else '/'
 
     # Connect to host
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((host, 80))
 
-    # Send HTTP GET request
-    request = f"GET / HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n"
+    # Choose correct Accept header
+    accept_header = "application/json" if accept == "json" else "text/html"
+
+    request = (
+        f"GET {path} HTTP/1.1\r\n"
+        f"Host: {host}\r\n"
+        f"Accept: {accept_header}\r\n"
+        f"Connection: close\r\n\r\n"
+    )
     s.send(request.encode())
 
     # Receive response
@@ -51,7 +59,13 @@ def make_request(url):
                 ss.connect((new_host, 443))
 
                 # Send HTTPS GET request
-                request = f"GET {new_path} HTTP/1.1\r\nHost: {new_host}\r\nConnection: close\r\n\r\n"
+                accept_header = "application/json" if accept == "json" else "text/html"
+                request = (
+                    f"GET {new_path} HTTP/1.1\r\n"
+                    f"Host: {new_host}\r\n"
+                    f"Accept: {accept_header}\r\n"
+                    f"Connection: close\r\n\r\n"
+                )
                 ss.send(request.encode())
 
                 # Receive response
